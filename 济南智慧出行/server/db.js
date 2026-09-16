@@ -5,7 +5,7 @@ const config = {
   server: 'localhost',
   port: 1433,
   user: 'sa',
-  password: 'qiannian123456',
+  password: '1982198006Lhl',
   database: 'jncity',
   options: {
     encrypt: false,
