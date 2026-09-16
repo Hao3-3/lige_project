@@ -9,131 +9,46 @@
     风向：{{ wzwinddirection }}
   </div>-->
   <div class="footer" :style="{ bottom: footerBottom + 'px' }" @mousedown="onFooterMouseDown">
-    <!--      <div class="item" v-for="(item, index) in funcItems">
-        <button class="item-btn" @click="item.trigger">
-          <i :class="['iconfont', item.icon]"></i>
-        </button>
-        <p>{{ index === funcItems.length - 1 ? mark : item.title }}</p>
-      </div> -->
-    <div class="item">
-
-      <button class="item-btn" @click="addhighline">
-        <i :class="['iconfont', 'icon-drawCircleTool']"></i>
-      </button>
-
-      <p>济南等高</p>
+    <div class="main-cat" :class="{ active: activeMenu==='traffic' }" @click="toggleMenu('traffic')">
+      <i :class="['iconfont', 'icon-kongzhi']"></i>
+      <p>交通出行</p>
     </div>
-
-
-
-    <div class="item">
-
-      <button class="item-btn" @click="addweather">
-        <img src="../assets/denggao.png"   style='width:17px;height: 15px;'>
-      </button>
-
-      <p>查看天气</p>
+    <div class="main-cat" :class="{ active: activeMenu==='tools' }" @click="toggleMenu('tools')">
+      <i :class="['iconfont', 'icon-icon-test']"></i>
+      <p>地图工具</p>
     </div>
-    <div class="item">
-      <button class="item-btn" @click="addbus">
-        <i :class="['iconfont', 'icon-kongzhi']" style="width: 500px;
-       height:500px;"></i>
-      </button>
-      <p>公交系统</p>
-    </div>
-    <div class="item">
-      <button class="item-btn" @click="addmetro">
-        <i :class="['iconfont', 'icon-supervision-full']"></i>
-      </button>
-      <p>地铁系统</p>
-    </div>
-    <div class="item">
-      <button class="item-btn" @click="layerPanelVisible = !layerPanelVisible">
-        <i :class="['iconfont', 'icon-supervision-full']"></i>
-      </button>
-      <p>图层控制</p>
-    </div>
-    <div class="item">
-      <button class="item-btn" @click="transitVisible = true">
-        <i :class="['iconfont', 'icon-icon-test']"></i>
-      </button>
-      <p>公交路线</p>
-    </div>
-    <div class="item">
-      <button class="item-btn" @click="toggleTraffic">
-        <i :class="['iconfont', 'icon-kongzhi']"></i>
-      </button>
-      <p>实时路况</p>
-    </div>
-    <div class="item">
-      <button class="item-btn" @click="startReport">
-        <i :class="['iconfont', 'icon-supervision-full']"></i>
-      </button>
-      <p>事件上报</p>
-    </div>
-    <div class="item">
-      <button class="item-btn" @click="poiDialogVisible = true">
-        <i :class="['iconfont', 'icon-icon-test']"></i>
-      </button>
-      <p>周边检索</p>
-    </div>
-    <div class="item">
-      <button class="item-btn" @click="busArrivalDialog = true">
-        <i :class="['iconfont', 'icon-icon-test']"></i>
-      </button>
-      <p>到站预测</p>
-    </div>
-    <div class="item">
-      <button class="item-btn" @click="scheduleDialog = true">
-        <i :class="['iconfont', 'icon-supervision-full']"></i>
-      </button>
-      <p>班次查询</p>
-    </div>
-    <div class="item">
-      <button class="item-btn" @click="openFavDialog">
-        <i :class="['iconfont', 'icon-kongzhi']"></i>
-      </button>
-      <p>我的收藏</p>
-    </div>
-    <div class="item">
-      <button class="item-btn" @click="addll">
-        <i :class="['iconfont', 'icon-ruler']"></i>
-      </button>
-      <p>县区规划</p>
-    </div>
-    <div class="item">
-      <DrawTool>
-        <button class="item-btn" @click="trigger">
-          <i :class="['iconfont', 'icon-paint']"></i>
-        </button>
-      </DrawTool>
-      <p>范围查询</p>
-    </div>
-    <div class="item">
-      <button class="item-btn" @click="flyJinan">
-        <i :class="['iconfont', 'icon-icon-test']"></i>
-      </button>
-      <p>飞行济南</p>
-    </div>
-    <div class="item">
-      <button class="item-btn" @click="controlCenter">
-        <i :class="['iconfont', 'icon-supervision-full']"></i>
-      </button>
-      <p>控制中心</p>
-    </div>
-    <div class="item">
-      <button class="item-btn" @click="toggleRotate">
-        <i :class="['iconfont', 'icon-fuwudiqiu']"></i>
-      </button>
-      <p>{{ mark }}</p>
+    <div class="main-cat" :class="{ active: activeMenu==='view' }" @click="toggleMenu('view')">
+      <i :class="['iconfont', 'icon-supervision-full']"></i>
+      <p>视图控制</p>
     </div>
   </div>
 
-  <!-- 公告通知滚动栏 -->
-  <div v-if="announcements.length" class="announce-bar" @click="announceDialog = true">
+  <!-- 分类子菜单浮层 -->
+  <div v-show="activeMenu" class="submenu" @mousedown.stop>
+    <div class="submenu-head">
+      <span>{{ menuTitle }}</span>
+      <button class="submenu-close" @click="activeMenu=''">✕</button>
+    </div>
+    <div class="submenu-grid">
+      <div class="submenu-item" v-for="item in currentMenuItems" :key="item.label" @click="runMenuItem(item)">
+        <i :class="['iconfont', item.icon]"></i>
+        <p>{{ item.label }}</p>
+      </div>
+    </div>
+  </div>
+
+    <!-- 公告通知跑马灯滚动栏 -->
+  <div v-if="allAnnouncements.length" class="announce-bar" @click="announceDialog = true">
     <span class="announce-icon">📢</span>
     <div class="announce-scroll">
-      <span class="announce-text">{{ currentAnnounce }}</span>
+      <div class="announce-track">
+        <span v-for="(a, i) in allAnnouncements" :key="i" class="announce-item-text">
+          <b class="ann-tag" :class="'ann-' + a.type">[{{ annTypeLabel(a.type) }}]</b> {{ a.title }}：{{ a.content }}
+        </span>
+        <span v-for="(a, i) in allAnnouncements" :key="'dup' + i" class="announce-item-text">
+          <b class="ann-tag" :class="'ann-' + a.type">[{{ annTypeLabel(a.type) }}]</b> {{ a.title }}：{{ a.content }}
+        </span>
+      </div>
     </div>
   </div>
   <!-- 实时路况文字摘要 -->
@@ -215,9 +130,43 @@
       <el-button @click="transitVisible = false">关闭</el-button>
       <el-button v-if="routeInfo" @click="favCurrentRoute">⭐ 收藏此路线</el-button>
       <el-button v-if="routeBounds" @click="overviewRoute">全览路线</el-button>
+      <el-button v-if="routeInfo && travelMode==='驾车'" type="success" @click="startLaneNavi">🧭 开始导航</el-button>
       <el-button type="primary" @click="queryTransit">查询路线</el-button>
     </template>
   </el-dialog>
+
+
+  <!-- 车道级导航浮层 -->
+  <div v-if="laneNavi.active" class="lane-navi-overlay">
+    <div class="ln-main">
+      <div class="ln-arrow-box">
+        <svg viewBox="0 0 64 64" class="ln-arrow-svg">
+          <path v-if="laneNavi.arrow==='left'" d="M40 14 L18 32 L40 50 L40 38 L30 32 L40 26 Z" fill="#fff"/>
+          <path v-else-if="laneNavi.arrow==='right'" d="M24 14 L46 32 L24 50 L24 38 L34 32 L24 26 Z" fill="#fff"/>
+          <path v-else-if="laneNavi.arrow==='uturn'" d="M20 46 L20 26 Q20 14 32 14 Q44 14 44 26 L44 32 M44 20 L50 26 L44 32" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round"/>
+          <path v-else d="M32 12 L44 36 L36 36 L36 52 L28 52 L28 36 L20 36 Z" fill="#fff"/>
+        </svg>
+      </div>
+      <div class="ln-info">
+        <div class="ln-dist">{{ laneNavi.distance }}</div>
+        <div class="ln-road">{{ laneNavi.road }}</div>
+      </div>
+      <button class="ln-exit" @click="exitLaneNavi">✕ 退出</button>
+    </div>
+    <div class="ln-bottom">
+      <div class="ln-eta">⏱ 剩余 <b>{{ laneNavi.remainMin }}</b> 分钟</div>
+      <div class="ln-lanes">
+        <div class="ln-lane" v-for="(lane,i) in laneNavi.lanes" :key="i" :class="{rec: lane.rec}">
+          <svg viewBox="0 0 40 30" class="ln-lane-svg">
+            <path v-if="lane.left" d="M18 8 L6 15 L18 22" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+            <path v-if="lane.straight" d="M20 6 L20 24" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+            <path v-if="lane.right" d="M22 8 L34 15 L22 22" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          </svg>
+          <div v-if="lane.rec" class="ln-rec-badge">推荐</div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- 交通事件上报对话框 -->
   <el-dialog v-model="reportDialogVisible" title="交通事件上报" width="440px" :append-to-body="true" class="dark-map-dialog">
@@ -813,16 +762,32 @@ const BUS_STOP_NAME = 'jinan-bus-stops' // L7 图层唯一名，供 getLayerByNa
 // 创建公交站图标图层（L7），只在需要时 add
 function ensureBusStopLayer() {
   if (busStopLayer) return busStopLayer;
-  if (!scene.hasImage('bus-icon')) {
-    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3" fill="#FFD700" stroke="#a87500" stroke-width="1.5"/><line x1="7" y1="9" x2="17" y2="9" stroke="#fff" stroke-width="2" opacity="0.85"/></svg>`;
-    scene.addImage('bus-icon', 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg));
+  if (!scene.hasImage('bus-stop-icon')) {
+    scene.addImage('bus-stop-icon', 'data:image/png;base64,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');
   }
-  busStopLayer = new PointLayer({ zIndex: 7, name: BUS_STOP_NAME })
+  busStopLayer = new PointLayer({
+    zIndex: 7, name: BUS_STOP_NAME,
+    minZoom: 12, maxZoom: 20,
+    cluster: true,
+    clusterOption: {
+      radius: 60,
+      maxZoom: 14,
+      style: {
+        fill: 'rgba(0, 180, 220, 0.85)',
+        stroke: '#ffffff',
+        strokeWidth: 2,
+      }
+    }
+  })
     .source(busStopsData)
-    .shape('bus-icon')
-    .size(19);
+    .shape('img', () => 'bus-stop-icon')
+    .size(11);
   busStopLayer.on('click', e => {
     const p = e.feature.properties;
+    if (p && p.cluster) {
+      map.flyTo({ center: e.lngLat, zoom: Math.min((map.getZoom() || 10) + 2, 16) });
+      return;
+    }
     showBusStopPrediction(p);
   });
   return busStopLayer;
@@ -873,16 +838,32 @@ const METRO_STOP_NAME = 'jinan-metro-stops'
 
 function ensureMetroStopLayer() {
   if (metroStopLayer) return metroStopLayer;
-  if (!scene.hasImage('metro-icon')) {
-    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#00E5FF" stroke="#00707f" stroke-width="1.5"/><text x="12" y="16" font-size="13" font-weight="bold" text-anchor="middle" fill="#00404a" font-family="Arial, sans-serif">M</text></svg>`;
-    scene.addImage('metro-icon', 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg));
+  if (!scene.hasImage('metro-stop-icon')) {
+    scene.addImage('metro-stop-icon', 'data:image/png;base64,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');
   }
-  metroStopLayer = new PointLayer({ zIndex: 3, name: METRO_STOP_NAME })
+  metroStopLayer = new PointLayer({
+    zIndex: 3, name: METRO_STOP_NAME,
+    minZoom: 12, maxZoom: 20,
+    cluster: true,
+    clusterOption: {
+      radius: 50,
+      maxZoom: 14,
+      style: {
+        fill: 'rgba(120, 70, 220, 0.85)',
+        stroke: '#ffffff',
+        strokeWidth: 2,
+      }
+    }
+  })
     .source(metroStopsData)
-    .shape('metro-icon')
-    .size(14);
+    .shape('img', () => 'metro-stop-icon')
+    .size(10);
   metroStopLayer.on('click', e => {
     const p = e.feature.properties;
+    if (p && p.cluster) {
+      map.flyTo({ center: e.lngLat, zoom: Math.min((map.getZoom() || 10) + 2, 16) });
+      return;
+    }
     map.flyTo({ center: [p.lng, p.lat], zoom: 15, pitch: 30 });
     popup = new Popup({ closeButton: true, closeOnClick: true })
       .setLnglat([p.lng, p.lat])
@@ -1351,13 +1332,13 @@ function startLiveBuses() {
 
   if (!liveVehicleLayer) {
 
-    liveVehicleLayer = new PointLayer({ zIndex: 6, name: 'live-buses' })
+    liveVehicleLayer = new PointLayer({ zIndex: 6, name: 'live-buses', minZoom: 13, maxZoom: 20 })
 
       .source({ type: 'FeatureCollection', features: buildVehicleFeatures() })
 
       .shape('img', v => v)
 
-      .size(22);
+      .size(14);
 
     liveVehicleLayer.on('mousemove', e => {
 
@@ -1589,24 +1570,30 @@ const addHistory = (query_text, type = 'transit') => {
   persistHist();
 };
 
-// —— 顶部公告通知（静态运营公告，定时轮播，点击打开全部）——
+// —— 顶部公告通知：静态公告 + 动态路况/事件，横向跑马灯 ——
 const announceDialog = ref(false);
-const announcements = ref([
-  { id: 1, type: 'alert', priority: 'high', title: '早晚高峰拥堵提醒', content: '工作日 7:30-9:00、17:30-19:00 经十路、北园高架、二环南高架车流较大，建议错峰或优先选择地铁、公交出行。', created_at: new Date().toISOString() },
+const staticAnnouncements = ref([
+  { id: 1, type: 'alert', priority: 'high', title: '早晚高峰拥堵提醒', content: '工作日 7:30-9:00、17:30-19:00 经十路、北园高架、二环南高架车流较大，建议错峰或优先选择地铁公交出行。', created_at: new Date().toISOString() },
   { id: 2, type: 'adjustment', priority: 'mid', title: '道路施工与绕行提示', content: '市区部分主次干道开展养护施工，途经车辆请按现场交通标志减速慢行，或提前规划绕行路线。', created_at: new Date().toISOString() },
-  { id: 3, type: 'other', priority: 'low', title: '绿色出行与实时公交', content: '公交地铁接驳可享换乘优惠；平台已上线实时公交到站预测，点击公交站点即可查看下一班到站时间与拥挤度。', created_at: new Date().toISOString() }
+  { id: 3, type: 'other', priority: 'low', title: '绿色出行与实时公交', content: '公交地铁接驳可享换乘优惠；平台已上线实时公交到站预测，点击公交站点即可查看下一班到站时间与拥挤度。', created_at: new Date().toISOString() },
+  { id: 4, type: 'alert', priority: 'high', title: '雨天出行提示', content: '今日有阵雨，路面湿滑，高架与下穿隧道易积水，请减速慢行、保持车距。', created_at: new Date().toISOString() },
+  { id: 5, type: 'other', priority: 'low', title: '地铁新线运营', content: '济南地铁4号线、6号线已开通运营，可通过地图「地铁系统」查看实时线路与站点。', created_at: new Date().toISOString() },
+  { id: 6, type: 'adjustment', priority: 'mid', title: '公交专用道启用', content: '经十路、旅游路公交专用道工作日 7:00-9:00、17:00-19:00 启用，社会车辆请勿占用。', created_at: new Date().toISOString() },
+  { id: 7, type: 'other', priority: 'low', title: '事件上报指引', content: '如遇交通事故、道路施工等突发情况，可通过底部「事件上报」功能在地图选点上报，便于其他市民及时绕行。', created_at: new Date().toISOString() }
 ]);
-const currentAnnounce = ref('');
-(function initAnnounce() {
-  const build = (a) => '📢 ' + a.title + '：' + a.content;
-  if (announcements.value.length) currentAnnounce.value = build(announcements.value[0]);
-  let ai = 0;
-  setInterval(() => {
-    if (!announcements.value.length) return;
-    ai = (ai + 1) % announcements.value.length;
-    currentAnnounce.value = build(announcements.value[ai]);
-  }, 6000);
-})();
+// 动态公告：路况摘要 + 事件上报，放在最前面
+const dynamicAnnouncements = ref([]);
+const allAnnouncements = computed(() => [...dynamicAnnouncements.value, ...staticAnnouncements.value]);
+const announcements = allAnnouncements; // 兼容详情弹窗引用
+const annTypeLabel = (t) => ({ alert: '预警', adjustment: '调整', other: '通知', traffic: '路况', event: '事件' }[t] || '通知');
+function upsertDynamicAnn(id, ann) {
+  const idx = dynamicAnnouncements.value.findIndex(a => a.id === id);
+  if (idx >= 0) dynamicAnnouncements.value[idx] = { ...ann, id };
+  else dynamicAnnouncements.value.unshift({ ...ann, id });
+}
+function removeDynamicAnn(id) {
+  dynamicAnnouncements.value = dynamicAnnouncements.value.filter(a => a.id !== id);
+}
 
 // —— 收藏当前规划路线 ——
 const favCurrentRoute = () => {
@@ -1949,6 +1936,131 @@ const overviewRoute = () => {
   transitVisible.value = false;
 };
 
+// ===== 车道级导航 =====
+const laneNavi = ref({
+  active: false,
+  arrow: '↑',
+  distance: '0m',
+  road: '导航中',
+  remainMin: 0,
+  lanes: []
+});
+
+const startLaneNavi = () => {
+  transitVisible.value = false;
+  const dist = routeInfo.value?.distance || 0;
+  const dur = routeInfo.value?.duration || 0;
+  const steps = routeInfo.value?.driveSteps || [];
+
+  // 根据第一步判断转向
+  let arrow = 'straight';
+  const firstStep = steps[0] || '';
+  if (/掉头|调头/.test(firstStep)) arrow = 'uturn';
+  else if (/右转|向右/.test(firstStep)) arrow = 'right';
+  else if (/左转|向左/.test(firstStep)) arrow = 'left';
+
+  // 车道模拟
+  const lanes = [
+    { left: false, straight: true, right: false, rec: false },
+    { left: true, straight: true, right: false, rec: true },
+    { left: false, straight: true, right: true, rec: false }
+  ];
+
+  laneNavi.value = {
+    active: true,
+    arrow,
+    distance: (dist / 1000).toFixed(1) + ' km',
+    road: routeInfo.value?.description?.slice(0, 18) || '前方道路',
+    remainMin: dur,
+    lanes
+  };
+
+  // 飞到起点，视角正对前进方向
+  if (currentRouteCoords && currentRouteCoords.length >= 2) {
+    const start = currentRouteCoords[0];
+    const next = currentRouteCoords[Math.min(10, currentRouteCoords.length - 1)];
+    const dy = next[1] - start[1];
+    const dx = next[0] - start[0];
+    let bearing = Math.atan2(dx, dy) * 180 / Math.PI;
+    if (bearing < 0) bearing += 360;
+    map.flyTo({
+      center: start,
+      zoom: 17,
+      pitch: 65,
+      bearing: bearing,
+      duration: 1800
+    });
+  } else if (routeBounds.value) {
+    map.flyTo({ center: routeBounds.value[0], zoom: 16, pitch: 60, duration: 1500 });
+  }
+  drawLaneMarkings();
+  ElMessage.success('车道级导航已启动');
+};
+
+// 在导航路线上画车道线示意
+function drawLaneMarkings() {
+  // 清除旧的
+  ['lane-mark-1','lane-mark-2','lane-mark-3'].forEach(id => {
+    if (map.getLayer(id)) map.removeLayer(id);
+  });
+  if (map.getSource('lane-marks')) { map.removeSource('lane-marks'); }
+  if (!currentRouteCoords || currentRouteCoords.length < 2) return;
+
+  // 沿路线偏移出3条平行车道线（左右各偏移一点）
+  const lanes = [[0,0.00008], [0,0], [0,-0.00008]];
+  const features = [];
+  lanes.forEach((offset, idx) => {
+    const coords = currentRouteCoords.map(p => [p[0] + offset[0], p[1] + offset[1]]);
+    features.push({
+      type: 'Feature',
+      geometry: { type: 'LineString', coordinates: coords },
+      properties: { idx }
+    });
+  });
+  map.addSource('lane-marks', {
+    type: 'geojson',
+    data: { type: 'FeatureCollection', features }
+  });
+  // 车道线：白色虚线
+  for (let i = 0; i < 3; i++) {
+    map.addLayer({
+      id: 'lane-mark-' + i,
+      type: 'line',
+      source: 'lane-marks',
+      filter: ['==', ['get', 'idx'], i],
+      paint: {
+        'line-color': i === 1 ? '#ffffff' : 'rgba(255,255,255,0.5)',
+        'line-width': i === 1 ? 3 : 2,
+        'line-dasharray': i === 1 ? [2, 3] : [1, 2],
+        'line-opacity': 0.9
+      }
+    });
+  }
+}
+
+const exitLaneNavi = () => {
+  laneNavi.value.active = false;
+  // 清除车道线
+  ['lane-mark-1','lane-mark-2','lane-mark-3'].forEach(id => {
+    if (map.getLayer(id)) map.removeLayer(id);
+  });
+  if (map.getSource('lane-marks')) map.removeSource('lane-marks');
+  // 清除路线
+  ['transit-route-glow','transit-route-line','transit-route-points'].forEach(id => {
+    if (map.getLayer(id)) map.removeLayer(id);
+  });
+  if (map.getSource('transit-route')) map.removeSource('transit-route');
+  routeInfo.value = null;
+  // 恢复视图：正北、俯视
+  map.flyTo({
+    bearing: 0,
+    pitch: 0,
+    zoom: map.getZoom() > 16 ? 12 : map.getZoom(),
+    duration: 1000
+  });
+  ElMessage.success('已退出导航');
+};
+
 // ============================================================
 // ① 实时路况图层（高德交通态势 rectangle，按当前视野绘制拥堵道路）
 // ============================================================
@@ -1996,6 +2108,7 @@ async function fetchTraffic() {
     trafficSummary.value = tinfo.evaluation
       ? `当前区域：${tinfo.evaluation.description}　畅通 ${tinfo.evaluation.expedite} / 缓行拥堵 ${tinfo.evaluation.congested}`
       : '';
+    if (tinfo.evaluation) upsertDynamicAnn('traffic', { type: 'traffic', priority: 'mid', title: '实时路况', content: trafficSummary.value });
     const features = [];
     roads.forEach(road => {
       if (!road.polyline) return;
@@ -2047,6 +2160,7 @@ const toggleTraffic = () => {
   if (trafficOn.value) {
     trafficOn.value = false;
     trafficSummary.value = '';
+    removeDynamicAnn('traffic');
     if (trafficTimer) { clearInterval(trafficTimer); trafficTimer = null; }
     removeTrafficLayers();
     if (trafficHoverPopup) trafficHoverPopup.remove();
@@ -2057,6 +2171,7 @@ const toggleTraffic = () => {
     bindTrafficHover();
     fetchTraffic();
     trafficTimer = setInterval(fetchTraffic, 60000);
+    upsertDynamicAnn('traffic', { type: 'traffic', priority: 'mid', title: '实时路况', content: '实时路况已开启，绿畅通/黄缓行/橙拥堵/红严重拥堵，每60秒刷新。' });
     ElMessage.success('实时路况已开启：绿畅通 / 黄缓行 / 橙拥堵 / 红严重拥堵，每60秒刷新');
   }
 };
@@ -2122,6 +2237,10 @@ const submitReport = async () => {
     ElMessage.success('交通事件上报成功');
     reportDialogVisible.value = false;
     resetReportForm();
+    upsertDynamicAnn('event-' + (Date.now()), {
+      type: 'event', priority: 'high', title: '新事件：' + (f.address || reportForm.value.address || '未知地点'),
+      content: (EVENT_TYPES.find(t => t.value === f.type)?.label || '事件') + '，' + (f.description || '无描述') + '，上报人：' + username
+    });
     loadReportedEvents();
   } catch (err) {
     ElMessage.error('上报失败：' + err.message);
@@ -2159,7 +2278,7 @@ function renderReportedEvents() {
   reportEventsLayer = new PointLayer({ zIndex: 6 })
     .source({ type: 'FeatureCollection', features })
     .shape('img', v => v)
-    .size('level', l => 22 + Number(l) * 4);
+    .size('level', l => 12 + Number(l) * 2);
   reportEventsLayer.on('mousemove', e => {
     const p = e.feature && e.feature.properties;
     if (!p) return;
@@ -2242,7 +2361,9 @@ const tagAlts = (alts) => {
 };
 
 // 统一绘制路线（公交带途经站，驾车/步行不带）
+let currentRouteCoords = [];
 const paintRoute = (coords, stopPoints, lineColor, o, d) => {
+  currentRouteCoords = coords;
   const geojson = {
     type: 'FeatureCollection',
     features: [
@@ -2471,13 +2592,26 @@ function renderPoiLayer() {
     geometry: { type: 'Point', coordinates: [it.lng, it.lat] },
     properties: { ...it }
   }));
-  poiLayer = new PointLayer({ zIndex: 6 })
+  poiLayer = new PointLayer({
+    zIndex: 6,
+    minZoom: 13,
+    cluster: true,
+    clusterOption: {
+      radius: 55,
+      maxZoom: 15,
+      style: {
+        fill: 'rgba(255, 152, 0, 0.85)',
+        stroke: '#ffffff',
+        strokeWidth: 2,
+      }
+    }
+  })
     .source({ type: 'FeatureCollection', features: poiFeatures })
     .shape('img', v => v)
-    .size(26);
+    .size(16);
   poiLayer.on('mousemove', e => {
     const p = e.feature && e.feature.properties;
-    if (!p) return;
+    if (!p || p.cluster) return;
     if (hoverPopup) scene.removePopup(hoverPopup);
     hoverPopup = new Popup({ offsets: [0, -12], closeButton: false, closeOnClick: false })
       .setLnglat(e.lngLat)
@@ -2490,6 +2624,11 @@ function renderPoiLayer() {
   poiLayer.on('click', e => {
     const p = e.feature && e.feature.properties;
     if (!p) return;
+    if (p.cluster) {
+      // 点击聚合点：放大地图展开
+      map.flyTo({ center: e.lngLat, zoom: Math.min((map.getZoom() || 10) + 2, 16) });
+      return;
+    }
     if (popup) scene.removePopup(popup);
     if (hoverPopup) { scene.removePopup(hoverPopup); hoverPopup = null; }
     popup = new Popup({ closeButton: true, closeOnClick: true })
@@ -2672,6 +2811,39 @@ const addhighline=()=>{
 }
 
 
+// ===== 底部功能栏分类菜单（所有函数定义后再引用）=====
+const activeMenu = ref('')
+const menuGroups = {
+  traffic: [
+    { icon: 'icon-kongzhi', label: '公交系统', action: () => addbus() },
+    { icon: 'icon-supervision-full', label: '地铁系统', action: () => addmetro() },
+    { icon: 'icon-icon-test', label: '公交路线', action: () => { transitVisible.value = true } },
+    { icon: 'icon-kongzhi', label: '实时路况', action: () => toggleTraffic() },
+    { icon: 'icon-icon-test', label: '到站预测', action: () => { busArrivalDialog.value = true } },
+    { icon: 'icon-supervision-full', label: '班次查询', action: () => { scheduleDialog.value = true } },
+  ],
+  tools: [
+    { icon: 'icon-icon-test', label: '周边检索', action: () => { poiDialogVisible.value = true } },
+    { icon: 'icon-supervision-full', label: '事件上报', action: () => startReport() },
+    { icon: 'icon-paint', label: '范围查询', action: () => trigger() },
+    { icon: 'icon-ruler', label: '县区规划', action: () => addll() },
+    { icon: 'icon-supervision-full', label: '图层控制', action: () => { layerPanelVisible.value = !layerPanelVisible.value } },
+    { icon: 'icon-drawCircleTool', label: '济南等高', action: () => addhighline() },
+    { icon: 'icon-icon-test', label: '查看天气', action: () => addweather() },
+  ],
+  view: [
+    { icon: 'icon-kongzhi', label: '我的收藏', action: () => openFavDialog() },
+    { icon: 'icon-icon-test', label: '飞行济南', action: () => flyJinan() },
+    { icon: 'icon-supervision-full', label: '控制中心', action: () => controlCenter() },
+    { icon: 'icon-fuwudiqiu', label: '自动旋转', action: () => toggleRotate() },
+  ]
+}
+const menuTitles = { traffic: '交通出行', tools: '地图工具', view: '视图控制' }
+const currentMenuItems = computed(() => menuGroups[activeMenu.value] || [])
+const menuTitle = computed(() => menuTitles[activeMenu.value] || '')
+function toggleMenu(key) { activeMenu.value = activeMenu.value === key ? '' : key }
+function runMenuItem(item) { item.action(); activeMenu.value = '' }
+
 </script>
 <style scoped>
 .event-detail-card {
@@ -2760,9 +2932,24 @@ const addhighline=()=>{
   box-shadow: 0 4px 16px rgba(0, 0, 0, .35); backdrop-filter: blur(8px);
 }
 .announce-icon { flex: none; }
-.announce-scroll { overflow: hidden; white-space: nowrap; }
-.announce-text { color: #b9d6ec; transition: color .2s; }
-.announce-bar:hover .announce-text { color: #5fe0ff; }
+.announce-scroll { overflow: hidden; flex: 1; white-space: nowrap; mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent); -webkit-mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent); }
+.announce-track {
+  display: inline-flex; white-space: nowrap; align-items: center;
+  animation: announce-marquee 40s linear infinite;
+}
+.announce-track:hover { animation-play-state: paused; }
+.announce-item-text { color: #b9d6ec; margin-right: 50px; font-size: 12.5px; }
+.ann-tag { font-size: 11px; padding: 0 6px; border-radius: 6px; margin-right: 4px; }
+.ann-alert { background: rgba(255, 80, 80, .2); color: #ff8a8a; }
+.ann-adjustment { background: rgba(255, 179, 92, .2); color: #ffc98a; }
+.ann-other { background: rgba(95, 224, 255, .15); color: #8fe8ff; }
+.ann-traffic { background: rgba(255, 152, 0, .2); color: #ffcc80; }
+.ann-event { background: rgba(255, 82, 82, .25); color: #ff8a8a; }
+.announce-bar:hover .announce-item-text { color: #5fe0ff; }
+@keyframes announce-marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
 .announce-list { display: flex; flex-direction: column; gap: 10px; }
 .announce-item { padding: 10px 12px; border-radius: 10px; background: rgba(255,255,255,.05); border-left: 3px solid #5fe0ff; }
 .announce-item.ann-priority-high { border-left-color: #ff6b6b; }
@@ -2923,7 +3110,7 @@ const addhighline=()=>{
   align-items: center;
   justify-content: center;
   color: #fff;
-  margin-right: 15px;
+  margin-right: 8px;
   margin-bottom: -20px;
   font-size: 14px;
   transform: rotate(180deg);
@@ -3162,26 +3349,76 @@ const addhighline=()=>{
    ============================================================ */
 /* —— 底部工具栏按钮 —— */
 .item-btn {
-  width: 46px; height: 46px;
+  width: 36px; height: 36px;
   display: flex; align-items: center; justify-content: center;
   background: linear-gradient(160deg, rgba(40, 92, 134, .96), rgba(13, 38, 64, .96)) !important;
   background-color: rgba(20, 60, 96, .9) !important;
   border: 1px solid rgba(99, 205, 255, .45);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, .4), inset 0 1px 0 rgba(150, 225, 255, .35) !important;
+  box-shadow: 0 3px 9px rgba(0, 0, 0, .4), inset 0 1px 0 rgba(150, 225, 255, .35) !important;
   transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
 }
-.item-btn i { font-size: 19px; color: #cdeeff; font-style: normal; }
+.item-btn i { font-size: 15px; color: #cdeeff; font-style: normal; }
 .item-btn img { filter: drop-shadow(0 0 3px rgba(120, 220, 255, .6)); }
 .item-btn:hover {
-  transform: translateY(-3px) scale(1.06);
+  transform: translateY(-2px) scale(1.08);
   border-color: #5fe0ff; filter: none;
-  box-shadow: 0 0 16px rgba(0, 212, 255, .65), 0 6px 16px rgba(0, 0, 0, .45), inset 0 1px 0 rgba(180, 235, 255, .5) !important;
+  box-shadow: 0 0 12px rgba(0, 212, 255, .6), 0 4px 12px rgba(0, 0, 0, .45), inset 0 1px 0 rgba(180, 235, 255, .5) !important;
 }
-.item-btn:active { transform: translateY(-1px) scale(.97); }
+.item-btn:active { transform: translateY(-1px) scale(.96); }
 .item p {
-  margin: 3px 0 0; padding: 1px 9px; font-size: 12px; color: #d4ecff;
+  margin: 2px 0 0; padding: 0 7px; font-size: 11px; color: #d4ecff;
   background: rgba(8, 24, 40, .6); border: 1px solid rgba(99, 205, 255, .18);
-  border-radius: 9px; text-shadow: 0 1px 3px #000; white-space: nowrap;
+  border-radius: 8px; text-shadow: 0 1px 3px #000; white-space: nowrap;
+}
+.main-cat {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  color: #cdeeff; cursor: pointer; margin: 0 18px; margin-bottom: -18px;
+  transform: rotate(180deg);
+}
+.main-cat i { font-size: 18px; font-style: normal; }
+.main-cat p {
+  margin: 3px 0 0; font-size: 12px; color: #d4ecff;
+  background: rgba(8, 24, 40, .6); border: 1px solid rgba(99, 205, 255, .18);
+  border-radius: 9px; padding: 1px 10px; white-space: nowrap;
+}
+.main-cat:hover i, .main-cat.active i { color: #5fe0ff; }
+.main-cat.active p { border-color: #5fe0ff; color: #5fe0ff; }
+.submenu {
+  position: fixed; bottom: 8vh; left: 50%; transform: translateX(-50%);
+  z-index: 4; min-width: 360px;
+  background: linear-gradient(160deg, rgba(12, 30, 48, .96), rgba(8, 20, 40, .96));
+  border: 1px solid rgba(0, 212, 255, .4); border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, .5); backdrop-filter: blur(10px);
+  padding: 10px 14px;
+}
+.submenu-head {
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 13px; font-weight: 700; color: #5fe0ff; margin-bottom: 10px;
+  padding-bottom: 6px; border-bottom: 1px solid rgba(0, 212, 255, .2);
+}
+.submenu-close {
+  background: none; border: none; color: #9fd8ef; font-size: 14px;
+  cursor: pointer; padding: 0 4px;
+}
+.submenu-close:hover { color: #ff6a6a; }
+.submenu-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;
+}
+.submenu-item {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  padding: 8px 4px; border-radius: 8px; cursor: pointer;
+  border: 1px solid rgba(99, 205, 255, .15); transition: all .15s ease;
+}
+.submenu-item:hover {
+  background: rgba(0, 212, 255, .12); border-color: #5fe0ff;
+}
+.submenu-item i { font-size: 16px; color: #cdeeff; font-style: normal; }
+.submenu-item:hover i { color: #5fe0ff; }
+.submenu-item p { font-size: 11px; color: #d4ecff; margin: 0; white-space: nowrap; }
+.group-divider {
+  width: 1px; height: 42px; margin: 0 8px; flex: none;
+  background: linear-gradient(to bottom, transparent, rgba(99, 205, 255, .5), transparent);
+  transform: rotate(180deg);
 }
 
 /* —— 路线规划表单 / 结果区 —— */
@@ -3240,6 +3477,117 @@ const addhighline=()=>{
   box-shadow: 0 10px 34px rgba(0, 0, 0, .5), 0 0 0 1px rgba(0, 212, 255, .06) !important;
 }
 
+
+/* ===== 车道级导航浮层 ===== */
+.lane-navi-overlay {
+  position: fixed;
+  top: 11vh;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 300;
+  background: linear-gradient(145deg, rgba(8,25,50,.94), rgba(5,15,35,.96));
+  border: 1px solid rgba(0,212,255,.35);
+  border-radius: 18px;
+  padding: 16px 20px;
+  box-shadow: 0 8px 32px rgba(0,0,0,.5), 0 0 24px rgba(0,212,255,.15);
+  backdrop-filter: blur(14px);
+  color: #fff;
+  min-width: 420px;
+}
+.ln-main {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+.ln-arrow-box {
+  width: 64px;
+  height: 64px;
+  background: linear-gradient(135deg, #00bcd4, #0091ea);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 20px rgba(0,188,212,.5);
+  flex-shrink: 0;
+}
+.ln-arrow-svg { width: 44px; height: 44px; }
+.ln-info { flex: 1; min-width: 0; }
+.ln-dist {
+  font-size: 30px;
+  font-weight: 800;
+  color: #5fe0ff;
+  text-shadow: 0 0 12px rgba(0,212,255,.5);
+  line-height: 1.1;
+}
+.ln-road {
+  font-size: 14px;
+  color: rgba(200,230,255,.85);
+  margin-top: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ln-exit {
+  padding: 7px 16px;
+  background: rgba(255,80,80,.15);
+  border: 1px solid rgba(255,100,100,.4);
+  color: #ff9e9e;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: all .15s;
+}
+.ln-exit:hover { background: rgba(255,80,80,.35); }
+.ln-bottom {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255,255,255,.08);
+}
+.ln-eta {
+  font-size: 13px;
+  color: rgba(180,220,255,.75);
+  white-space: nowrap;
+}
+.ln-eta b { color: #5fe0ff; font-size: 16px; }
+.ln-lanes {
+  display: flex;
+  gap: 6px;
+  flex: 1;
+  justify-content: flex-end;
+}
+.ln-lane {
+  position: relative;
+  width: 46px;
+  height: 34px;
+  background: rgba(255,255,255,.06);
+  border: 1.5px solid rgba(255,255,255,.25);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255,255,255,.8);
+}
+.ln-lane-svg { width: 30px; height: 22px; }
+.ln-lane.rec {
+  background: rgba(0,212,255,.25);
+  border-color: #5fe0ff;
+  box-shadow: 0 0 12px rgba(0,212,255,.4);
+  color: #5fe0ff;
+}
+.ln-rec-badge {
+  position: absolute;
+  top: -8px;
+  right: -6px;
+  background: #5fe0ff;
+  color: #002;
+  font-size: 9px;
+  padding: 1px 6px;
+  border-radius: 8px;
+  font-weight: 700;
+}
 </style>
 
 <style>

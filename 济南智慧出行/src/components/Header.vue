@@ -54,14 +54,12 @@ const timeStr = computed(() => {
   return `${h}:${mi}:${s}`
 })
 
-// 暖色/冷色主题切换
-const isCold = ref(false)
+const isCold = ref(true)
 const toggleTheme = () => {
   isCold.value = !isCold.value
-  document.body.classList.toggle('cold', isCold.value)
+  document.body.classList.toggle('warm', !isCold.value)
 }
 
-// 时间拖动
 const timerStyle = ref(null);
 let timerDragState = null;
 
@@ -152,32 +150,35 @@ const onTimerMouseUp = () => {
     z-index: 200;
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
-    gap: 2px;
-    padding: 12px 18px;
-    background: rgba(15, 15, 20, 0.45);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid var(--accent);
-    border-radius: 12px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+    align-items: center;
+    gap: 4px;
+    padding: 16px 22px;
+    background: linear-gradient(145deg, rgba(10, 25, 50, 0.35), rgba(5, 15, 35, 0.45));
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(0, 212, 255, 0.45);
+    border-radius: 16px;
+    box-shadow: 0 0 20px rgba(0, 212, 255, 0.2), inset 0 1px 0 rgba(120, 200, 255, 0.2);
     color: #fff;
+    min-width: 130px;
+    text-align: center;
 }
 
 .timer .date {
-    font-size: 13px;
-    color: rgba(255, 255, 255, 0.72);
-    letter-spacing: 1px;
+    font-size: 12px;
+    color: rgba(160, 220, 255, 0.85);
+    letter-spacing: 2px;
     margin: 0;
 }
 
 .timer .time {
-    font-size: 26px;
+    font-size: 30px;
     font-weight: 700;
     font-family: 'Courier New', Consolas, monospace;
-    color: var(--accent);
-    letter-spacing: 1px;
-    line-height: 1.2;
+    color: #5fe0ff;
+    letter-spacing: 2px;
+    line-height: 1.1;
     margin: 0;
+    text-shadow: 0 0 12px rgba(0, 212, 255, 0.6);
 }
 </style>

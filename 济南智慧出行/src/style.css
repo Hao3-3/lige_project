@@ -1,5 +1,27 @@
 /* 主题变量：默认暖色，.cold 类切换为冷色 */
 :root{
+  --accent: #4cc9f0;
+  --accent-contrast: #0a1420;
+  --control-bg: rgba(15, 35, 60, 0.88);
+  --control-bg-solid: rgba(12, 30, 52, 0.85);
+  --panel-bg: rgba(10, 30, 55, 0.72);
+  --btn-grad-top: rgba(0, 180, 255, 0.35);
+  --btn-grad-bottom: rgba(0, 120, 200, 0.25);
+  --header-bg: linear-gradient(180deg, #0a1e3a 0%, #123358 100%);
+}
+
+.cold{
+  --accent: #4cc9f0;
+  --accent-contrast: #0a1420;
+  --control-bg: rgba(15, 35, 60, 0.88);
+  --control-bg-solid: rgba(12, 30, 52, 0.85);
+  --panel-bg: rgba(10, 30, 55, 0.72);
+  --btn-grad-top: rgba(0, 180, 255, 0.35);
+  --btn-grad-bottom: rgba(0, 120, 200, 0.25);
+  --header-bg: linear-gradient(180deg, #0a1e3a 0%, #123358 100%);
+}
+
+.warm{
   --accent: #f0a03c;
   --accent-contrast: #2c1a08;
   --control-bg: rgba(82, 52, 28, 0.85);
@@ -8,17 +30,6 @@
   --btn-grad-top: rgba(240, 160, 60, 0.42);
   --btn-grad-bottom: rgba(210, 130, 45, 0.34);
   --header-bg: linear-gradient(180deg, #3d2a18 0%, #5a3d20 100%);
-}
-
-.cold{
-  --accent: #4cc9f0;
-  --accent-contrast: #0a1420;
-  --control-bg: rgba(20, 30, 45, 0.85);
-  --control-bg-solid: rgba(20, 30, 45, 0.75);
-  --panel-bg: #53697670;
-  --btn-grad-top: rgba(0, 128, 255, 0.377);
-  --btn-grad-bottom: rgba(0, 128, 255, 0.281);
-  --header-bg: linear-gradient(180deg, #12233a 0%, #1e3a5c 100%);
 }
 
 *{

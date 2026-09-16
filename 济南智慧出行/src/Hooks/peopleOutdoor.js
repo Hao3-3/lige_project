@@ -1,6 +1,6 @@
 import {ref} from 'vue'
 export const usePeopleOutdoor=()=>{
-    
+
 const green = '#00B96B';
 const yellow = '#fd7e14';
 const red = '#dc3545';
@@ -8,10 +8,9 @@ const config = {
   xField: "type",
   yField: "value",
   seriesField: "value",
+  columnWidthRatio: 0.35,
   label: {
-    // 可手动配置 label 数据标签位置
-    position: "top", // 'top', 'bottom', 'middle',
-    // 配置样式
+    position: "top",
     style: {
       fill: "#FFFFFF",
       opacity: 0.6,
@@ -28,6 +27,16 @@ const config = {
   },
   legend: false,
   height: 240,
+  yAxis: {
+    grid: {
+      line: {
+        style: { stroke: 'rgba(255,255,255,0.08)', lineDash: [2,3] }
+      }
+    }
+  },
+  xAxis: {
+    label: { style: { fill: 'rgba(255,255,255,0.7)' } }
+  }
 };
 
 const data = ref([

@@ -40,13 +40,18 @@
     position: absolute;
     top: -28px;
     right: 0;
-    padding: 2px 12px;
-    background: var(--control-bg);
-    color: #fff;
-    border: 1px solid var(--accent);
-    border-radius: 4px;
+    padding: 3px 14px;
+    background: linear-gradient(135deg, rgba(0, 180, 255, .25), rgba(0, 120, 200, .2));
+    color: #5fe0ff;
+    border: 1px solid rgba(0, 212, 255, .5);
+    border-radius: 12px;
     cursor: pointer;
     font-size: 12px;
     z-index: 5;
+    transition: all .15s;
+  }
+  .collapse-btn:hover {
+    background: rgba(0, 212, 255, .35);
+    box-shadow: 0 0 10px rgba(0, 212, 255, .4);
   }
   </style>
