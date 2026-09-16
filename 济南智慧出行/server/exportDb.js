@@ -14,7 +14,7 @@ function q(v) {
   return "N'" + String(v).replace(/'/g, "''") + "'";
 }
 
-// 表结构（与 init.js 一致）
+// 表结构（与 init.js 一致）444
 const SCHEMA = {
   users: {
     cols: ['id', 'username', 'password_hash', 'created_at'],
