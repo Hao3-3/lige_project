@@ -46,7 +46,7 @@ export function useMetro(shared) {
       map.flyTo({ center: [p.lng, p.lat], zoom: 15, pitch: 30 });
       ctx.popup = new Popup({ closeButton: true, closeOnClick: true })
         .setLnglat([p.lng, p.lat])
-        .setHTML(`<span>${p.name}（地铁站）</span>`);
+        .setHTML(`<div><strong>${p.name}</strong>（地铁站）${p.area ? `<div style="margin-top:4px;font-size:12px;color:rgba(255,255,255,0.75);">所属区县：${p.area}</div>` : ''}</div>`);
       scene.addPopup(ctx.popup);
     });
     return metroStopLayer;
