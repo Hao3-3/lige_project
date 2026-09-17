@@ -7,6 +7,7 @@
 </template>
   
 <script setup>
+// 首页视图：组装智能城市、地图控件、图表面板与底部工具栏
 import { ref } from "vue";
 import SmartCity from "../components/smartcity.vue";
 import MapControl from "../components/mapcontrol.vue";
