@@ -1,5 +1,4 @@
-// 初始化第一批新功能所需的数据表（可重复执行，表已存在则跳过）
-// 用法：node server/initExtra.js
+
 const { getPool } = require('./db');
 
 async function initExtra() {
