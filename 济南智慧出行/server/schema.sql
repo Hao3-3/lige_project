@@ -5,7 +5,7 @@
 CREATE TABLE dbo.users (
   id            INT IDENTITY(1,1) PRIMARY KEY,
   username      NVARCHAR(50)  NOT NULL UNIQUE,   -- 登录账号
-  password_hash NVARCHAR(100) NOT NULL,          -- bcrypt 加密后的密码
+  password_hash NVARCHAR(100) NOT NULL,          
   created_at    DATETIME      DEFAULT GETDATE()
 );
 
