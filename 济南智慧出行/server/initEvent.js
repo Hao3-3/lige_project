@@ -1,4 +1,4 @@
-// 初始化交通事件表 dbo.events（可重复执行，表已存在则跳过）
+
 const { getPool } = require('./db');
 
 async function initEvents() {
